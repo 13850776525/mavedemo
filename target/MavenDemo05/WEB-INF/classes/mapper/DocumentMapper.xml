@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiwei.mapper.DocumentMapper">
+
+    <select id="findDtype" resultType="com.weiwei.bean.Dtype">
+        select * from t_dtype
+    </select>
+
+    <insert id="upload" parameterType="com.weiwei.bean.Document">
+        INSERT into t_document (doc_title,doc_type,doc_score,doc_num,doc_state,user_id)
+        values(#{docTitle},#{docType},#{docScore},'5','1',#{userId})
+    </insert>
+
+    <select id="DocList" resultType="com.weiwei.bean.Document" parameterType="java.util.HashMap">
+    select * from t_document
+    <where>
+        <if test="docTitle!=null and docTitle!=''">
+            and doc_title like concat('%',#{docTitle},'%')
+        </if>
+        <if test="userId!=null and userId!=''">
+            and user_id like concat('%',#{userId},'%')
+        </if>
+        <if test="docType!=null and docType!=''">
+            and doc_type like concat('%',#{docType},'%')
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            and TO_DAYS(doc_time) >= TO_DAYS(#{startTime})
+        </if>
+        <if test="stopTime!=null and stopTime!=''">
+            <![CDATA[
+                and TO_DAYS(doc_time) <= TO_DAYS(#{stopTime})
+            ]]>
+        </if>
+        <if test="userAccount!=null and userAccount!=''">
+            and user_id like concat('%',#{userAccount},'%')
+        </if>
+    </where>
+        limit #{page},#{limit}
+  </select>
+
+    <select id="DocCount"  resultType="Integer">
+    select count(*) from t_document
+        <where>
+            <if test="docTitle!=null and docTitle!=''">
+                and doc_title like concat('%',#{docTitle},'%')
+            </if>
+            <if test="docType!=null and docType!=''">
+                and doc_type like concat('%',#{docType},'%')
+            </if>
+            <if test="userId!=null and userId!=''">
+                and user_id like concat('%',#{userId},'%')
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and  TO_DAYS(doc_time) >= TO_DAYS(#{startTime})
+            </if>
+            <if test="stopTime!=null and stopTime!=''">
+                <![CDATA[
+                    and  TO_DAYS(doc_time) <= TO_DAYS(#{stopTime})
+                ]]>
+            </if>
+            <if test="userAccount!=null and userAccount!=''">
+                and user_id like concat('%',#{userAccount},'%')
+            </if>
+        </where>
+  </select>
+
+    <update id="updateState"  parameterType="com.weiwei.bean.Document">
+    update t_document set doc_state = #{docState} where id = #{id}
+  </update>
+
+    <update id="updateDtypeState"  parameterType="com.weiwei.bean.Dtype">
+        update t_dtype set dtype_state = #{dtypeState} where dtype_id = #{dtypeId}
+    </update>
+
+    <insert id="addDtype" parameterType="java.util.HashMap">
+        INSERT into t_dtype (dtype_name,dtype_score,dtype_state)values(#{dtypeName},#{dtypeScore},#{dtypeState})
+    </insert>
+
+    <delete id="deleteDtype">
+        delete from t_dtype where dtype_id=#{dtypeId}
+    </delete>
+
+    <!--搜索文档-->
+    <select id="DocListAll" resultType="com.weiwei.bean.Document" parameterType="java.util.HashMap">
+        select * from t_document
+        <where>
+            <if test="docTitle!=null and docTitle!=''">
+                and doc_title like concat('%',#{docTitle},'%')
+            </if>
+            and doc_state = 1
+        </where>
+        limit #{page},#{limit}
+    </select>
+
+    <select id="DocCountAll"  resultType="Integer">
+        select count(*) from t_document
+        <where>
+            <if test="docTitle!=null and docTitle!=''">
+                and doc_title like concat('%',#{docTitle},'%')
+            </if>
+            and doc_state = 1
+        </where>
+    </select>
+
+    <select id="classBean"  resultType="com.weiwei.bean.Class">
+        select * from t_class where class_id = #{userClass}
+    </select>
+
+<!--下载扣除积分-->
+    <update id="deductScore">
+    update t_user set user_score = user_score-#{score} where user_account = #{account}
+  </update>
+<!--下载到下载文档-->
+    <insert id="loadDoc" parameterType="com.weiwei.bean.Load">
+        INSERT into t_load (load_name,load_type,load_admin,user_id)
+        values(#{loadName},#{loadType},#{loadAdmin},#{userId})
+    </insert>
+
+
+
+
+    <select id="MyLoadList" resultType="com.weiwei.bean.Load" parameterType="java.util.HashMap">
+        select * from t_load  where user_id = #{userAccount}  limit #{page},#{limit}
+    </select>
+
+    <select id="DoMyLoad"  resultType="Integer">
+        select count(*) from t_load  where user_id = #{userAccount}
+    </select>
+
+
+
+</mapper>

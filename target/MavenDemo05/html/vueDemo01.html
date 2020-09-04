@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>vue框架</title>
+<!--    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+    <script type="text/javascript" src="../js/vue.min.js"></script>
+<style>
+    [v-cloak]{
+        display: none;
+    }
+    .active{
+        color: #ff7800;
+    }
+    .isLive{
+        color: #0f88eb;
+    }
+</style>
+</head>
+<body>
+<div id="app">
+    <h1>{{count}}</h1>
+    <button @click="btnClick">按钮1</button>
+    <button @click="btnClick('666',$event)">按钮1</button>
+    <button @click="btnClick()">按钮1</button>
+</div>
+<script>
+    var app = new Vue({
+        el:'#app',
+        data: {
+            count:0,
+        },
+        methods:{
+            btnClick(abc,event){
+                console.log(abc+"------------哈"+event)
+            }
+
+        }
+    })
+</script>
+
+
+</body>
+</html>

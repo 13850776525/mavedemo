@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue框架</title>
+<!--    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+    <script type="text/javascript" src="../js/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>用户名：{{username}}</h1>
+        <h3 v-if="isVIP">用户类型：VIP</h3>
+
+        <div v-show="isShow" id="pane" style="background-color: #0f88eb;width: 200px;height: 200px">
+            HellVue!!
+        </div>
+        <button @click="showPane">切换内容</button>
+
+
+        <h3 v-show="tab==1">首页</h3>
+        <h3 v-show="tab==2">新闻</h3>
+        <h3 v-show="tab==3">个人中心</h3>
+        <button @click="tabChange" data-id="1">首页</button>
+        <button @click="tabChange" data-id="2">新闻</button>
+        <button @click="tabChange" data-id="3">个人中心</button>
+
+
+<!--        <h3>明星列表</h3>-->
+<!--        <ul>-->
+<!--            <li v-for="item in stars">-->
+<!--                {{item}}-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--        <h3>学生列表</h3>-->
+<!--        <ul>-->
+<!--            <li v-for="item in students">-->
+<!--                <h4>{{item.studentName}}</h4>-->
+<!--                <p>年龄：{{item.age}}</p>-->
+<!--                <p>学校：{{item.school}}</p>-->
+<!--            </li>-->
+<!--        </ul>-->
+
+        <div v-if="page=='login'" key="login">
+            <label>UserName</label>
+            <input type="text">
+        </div>
+        <div v-else  key="login">
+            <label>UserOK</label>
+            <input type="text">
+        </div>
+        <button @click="ChangePage">切换</button>
+
+    </div>
+    <script>
+        var app = new Vue({
+            el:'#app',
+            data:{
+                username:'刘大帅',
+                isVIP:false,
+                isShow:true,
+                page:'reg',
+                tab:1,
+                stars:['刘德华','周杰伦','王力宏'],
+                students:[
+                    {
+                        studentName:'小花',
+                        age:16,
+                        school:'北大'
+                    },
+                    {
+                        studentName:'小龙',
+                        age:16,
+                        school:'北大'
+                    },
+                    {
+                        studentName:'小西',
+                        age:16,
+                        school:'北大'
+                    }
+                ]
+            },
+            methods:{
+                ChangePage:function(){
+                    if (this.page =='reg'){
+                        this.page = 'login'
+                    }else{
+                        this.page = 'reg'
+                    }
+                },
+                showPane:function () {
+                    this.isShow = !this.isShow;
+                },
+                tabChange:function (e) {
+                    console.log(e)
+                    console.log(e.target.dataset.id)
+                    this.tab = e.target.dataset.id;
+                }
+            }
+        })
+    </script>
+
+
+</body>
+</html>

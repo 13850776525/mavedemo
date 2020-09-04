@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiwei.mapper.LogMapper">
+
+    <insert id="addLog" parameterType="com.weiwei.bean.Log">
+        INSERT into t_log (log_user,log_thing)values(#{logUser},#{logThing})
+    </insert>
+
+    <select id="LogList" resultType="com.weiwei.bean.Log" parameterType="java.util.HashMap">
+        select log_user,log_thing,log_id,log_date from t_log
+<!--        <where>-->
+<!--            <if test="account!=null and account!=''">-->
+<!--                and a.account like concat('%',#{account},'%')-->
+<!--            </if>-->
+<!--            <if test="name!=null and name!=''">-->
+<!--                and a.name like concat('%',#{name},'%')-->
+<!--            </if>-->
+<!--            <if test="roleid!=null and roleid!=''">-->
+<!--                and a.roleid like concat('%',#{roleid},'%')-->
+<!--            </if>-->
+<!--            and a.roleid = b.role_id-->
+<!--        </where>-->
+        limit #{page} ,#{limit}
+    </select>
+
+    <select id="LogCount"  resultType="Integer"  parameterType="java.util.HashMap">
+        select count(*) from t_log
+<!--        <where>-->
+<!--            <if test="account!=null and account!=''">-->
+<!--                and account like concat('%',#{account},'%')-->
+<!--            </if>-->
+<!--            <if test="name!=null and name!=''">-->
+<!--                and name like concat('%',#{name},'%')-->
+<!--            </if>-->
+<!--            <if test="roleid!=null and roleid!=''">-->
+<!--                and roleid like concat('%',#{roleid},'%')-->
+<!--            </if>-->
+<!--        </where>-->
+    </select>
+</mapper>

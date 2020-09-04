@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiwei.mapper.AdminMapper">
+    <select id="loginManger" resultType="com.weiwei.bean.Admin">
+    select * from t_admin where account = #{account} and password = #{password} limit 1
+    </select>
+
+    <select id="AdminList" resultType="com.weiwei.bean.Admin" parameterType="java.util.HashMap">
+    select a.name name,a.password password,a.account account,b.role_name roleid from t_admin a,t_role b
+    <where>
+        <if test="account!=null and account!=''">
+            and a.account like concat('%',#{account},'%')
+        </if>
+        <if test="name!=null and name!=''">
+            and a.name like concat('%',#{name},'%')
+        </if>
+        <if test="roleid!=null and roleid!=''">
+            and a.roleid like concat('%',#{roleid},'%')
+        </if>
+        and a.roleid = b.role_id
+    </where>
+     limit #{page} ,#{limit}
+  </select>
+
+    <select id="AdminCount"  resultType="Integer"  parameterType="java.util.HashMap">
+    select count(*) from t_admin
+        <where>
+            <if test="account!=null and account!=''">
+                and account like concat('%',#{account},'%')
+            </if>
+            <if test="name!=null and name!=''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="roleid!=null and roleid!=''">
+                and roleid like concat('%',#{roleid},'%')
+            </if>
+        </where>
+  </select>
+
+    <update id="updateManger"  parameterType="com.weiwei.bean.Admin">
+    update t_admin set password = #{password},roleid = #{roleid},name = #{name} where account = #{account}
+  </update>
+    <!--批量删除-->
+    <delete id="deleteManger" parameterType="java.lang.String">
+        delete from t_admin  where account in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--查询菜单-->
+    <select id="rootleList" resultType="com.weiwei.bean.rootle" >
+        SELECT a.root_id,a.role_id,b.root_name,b.root_url,b.root_pid,b.root_uid FROM t_rootle a,t_root b where a.role_id=#{role_id} and a.root_id = b.root_pid and b.root_uid = #{key}
+    </select>
+
+    <insert id="addManger" parameterType="java.lang.String">
+        INSERT into t_admin (name,password,roleid)values(#{name},#{password},#{roleid})
+    </insert>
+</mapper>

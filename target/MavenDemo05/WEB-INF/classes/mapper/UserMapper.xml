@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiwei.mapper.UserMapper">
+    <select id="login" resultType="com.weiwei.bean.User">
+    select * from t_user where user_account = #{userAccount} and user_password = #{userPassword} limit 1
+  </select>
+    <delete id="del">
+        delete from t_user where user_account=#{userAccount}
+    </delete>
+    <insert id="RegUser" parameterType="com.weiwei.bean.User" keyProperty="user_account" useGeneratedKeys="true" >
+        insert into t_user (user_name,user_password,user_phone,user_emall,user_sex) values (#{userName},#{userPassword},#{userPhone},#{userEmall},#{userSex})
+    </insert>
+
+    <insert id="ScoreAdd" parameterType="com.weiwei.bean.Score" >
+        insert into t_score (sco_user,sco_type,sco_score) values (#{scoUser},#{scoType},#{scoScore})
+    </insert>
+
+
+    <select id="UserList" resultType="com.weiwei.bean.User" parameterType="java.util.HashMap">
+        SELECT a.user_account,a.user_phone,a.user_name,a.user_password,a.user_emall,a.user_sex,a.user_date,a.user_upnum,a.user_downnum,a.user_score,a.user_state,b.class_name userClass
+        FROM t_user a,t_class b
+        <where>
+            <if test="userName!=null and userName!=''">
+                and a.user_name like concat('%',#{userName},'%')
+            </if>
+            <if test="userAccount!=null and userAccount!=''">
+                and a.user_account like concat('%',#{userAccount},'%')
+            </if>
+            <if test="userClass!=null and userClass!=''">
+                and a.user_class like concat('%',#{userClass},'%')
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and  TO_DAYS(user_date) >= TO_DAYS(#{startTime})
+            </if>
+            <if test="stopTime!=null and stopTime!=''">
+                <![CDATA[
+                    and  TO_DAYS(user_date) <= TO_DAYS(#{stopTime})
+                ]]>
+            </if>
+            and a.user_class = b.class_id
+        </where>
+        limit #{page} ,#{limit}
+    </select>
+
+
+    <select id="UserCount"  resultType="Integer"  parameterType="java.util.HashMap">
+        select count(*) from t_user
+        <where>
+            <if test="userName!=null and userName!=''">
+                and a.user_name like concat('%',#{userName},'%')
+            </if>
+            <if test="userAccount!=null and userAccount!=''">
+                and a.user_account like concat('%',#{userAccount},'%')
+            </if>
+            <if test="userClass!=null and userClass!=''">
+                and a.user_class like concat('%',#{userClass},'%')
+            </if>
+            <if test="startTime!=null and startTime!=''">
+                and  TO_DAYS(user_date) >= TO_DAYS(#{startTime})
+            </if>
+            <if test="stopTime!=null and stopTime!=''">
+                <![CDATA[
+                    and  TO_DAYS(user_date) <= TO_DAYS(#{stopTime})
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <update id="updateUserState"  parameterType="com.weiwei.bean.User">
+        update t_user set user_state = #{userState} where user_account = #{userAccount}
+    </update>
+
+    <update id="updateUser"  parameterType="com.weiwei.bean.User">
+        update t_user set user_password = #{userPassword},user_sex = #{userSex},user_emall = #{userEmall},user_phone = #{userPhone},user_name = #{userName} where user_account = #{userAccount}
+    </update>
+</mapper>

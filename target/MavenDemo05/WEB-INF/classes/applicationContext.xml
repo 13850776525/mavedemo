@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+
+<!--    <bean id="admin" class="com.bean.Admin" scope="singleton" >-->
+<!--        <property name="account" value="10086"></property>-->
+<!--        <property name="password" value="张大师"></property>-->
+<!--        <constructor-arg name="password" value="刘大叔"></constructor-arg>-->
+<!--        <property name="roleid" value="管理员"></property>-->
+<!--    </bean>-->
+
+<!--    <alias name="admin" alias="OK_admin"></alias>-->
+
+
+    <!--数据可连接配位文件-->
+    <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+
+    <bean id="druid" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close" init-method="init">
+        <!--数据库基本信息配置-->
+        <property name="connectionErrorRetryAttempts" value="3"></property>
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+
+        <!--最大并发数-->
+        <property name="maxActive" value="100"></property>
+        <!--初始化连接数量-->
+        <property name="initialSize" value="50"></property>
+        <!--连接等待超时时间-->
+        <property name="maxWait" value="10000"></property>
+
+        <!-- 最小空闲连接数 -->
+        <property name = "minIdle" value = "10" />
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name = "timeBetweenEvictionRunsMillis" value ="60000" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name = "minEvictableIdleTimeMillis" value ="300000" />
+    </bean>
+
+    <!--组件扫描-->
+    <context:component-scan base-package="com.weiwei"></context:component-scan>
+
+
+
+</beans>
